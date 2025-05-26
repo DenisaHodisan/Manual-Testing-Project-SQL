@@ -216,6 +216,7 @@ GROUP BY id_produs
 HAVING total_vandute > 1;
 
 -- BONUS SUBQUERY : clienții care nu au făcut comenzi în luna anterioară --
+
 SELECT nume FROM clienti
 WHERE id_client NOT IN (
     SELECT DISTINCT id_client FROM comenzi
