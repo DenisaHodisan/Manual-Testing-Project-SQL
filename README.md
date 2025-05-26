@@ -56,6 +56,7 @@ CREATE TABLE comenzi (
 );
 
 -- Tabel many-to-many între comenzi și produse --
+
 CREATE TABLE produse_comandate (
     id_comanda INT,
     id_produs INT,
@@ -70,25 +71,31 @@ CREATE TABLE produse_comandate (
   After the database and the tables have been created, a few ALTER instructions were written in order to update the structure of the database, as described below:
 
 --  Schimbare nume tabelă
+
 RENAME TABLE produse TO produse_v2;
 
 -- Adăugare coloană
+
 ALTER TABLE produse_v2
 ADD descriere TEXT;
 
 --  Ștergere coloană
+
 ALTER TABLE produse_v2
 DROP COLUMN descriere;
 
 --  Redenumire coloană
+
 ALTER TABLE produse_v2
 CHANGE pret pret_nou DECIMAL(12,2);
 
 --  Adăugare proprietăți coloane (auto-increment pentru id_client)
+
 ALTER TABLE clienti
 MODIFY COLUMN id_client INT NOT NULL AUTO_INCREMENT;
 
 -- Modificare tip de date și poziție coloană
+
 ALTER TABLE clienti
 MODIFY COLUMN telefon VARCHAR(15) AFTER email;
 
@@ -101,12 +108,14 @@ MODIFY COLUMN telefon VARCHAR(15) AFTER email;
   Below you can find all the insert instructions that were created in the scope of this project:
 
 -- Insert cu coloane explicite: specificarea coloanelor pe care sa se faca insert --
+
 INSERT INTO clienti (nume, email, telefon) VALUES 
 ('Ion Popescu', 'ionp@mail.com', '0722334455'),
 ('Maria Ionescu', 'maria@mail.com', '0733445566'),
 ('Andrei Georgescu', 'andrei@mail.com', '0722111222');
 
 -- Insert pe toate coloanele --
+
 INSERT INTO produse
 VALUES 
 (NULL, 'Hanorac', 199.99, 15, 'Hanorac bumbac 100%', 'albastru'),
@@ -114,11 +123,13 @@ VALUES
 (NULL, 'Tricou', 49.99, 50, 'Tricou casual', 'alb');
 
 -- Insert comenzi --
+
 INSERT INTO comenzi (id_client, data_comanda) VALUES 
 (1, '2025-05-26 10:30:00'),
 (2, '2025-05-27 11:00:00');
 
 -- Insert many-to-many (produse comandate) --
+
 INSERT INTO produse_comandate (id_comanda, id_produs, cantitate) VALUES
 (1, 1, 2),
 (1, 3, 1),
@@ -128,11 +139,13 @@ INSERT INTO produse_comandate (id_comanda, id_produs, cantitate) VALUES
   After the insert, in order to prepare the data to be better suited for the testing process, I updated some data in the following way:
 
   -- Modificare pret doar pentru produsul cu id_produs=1 --
+
 UPDATE produse
 SET pret = 249.99
 WHERE id_produs = 1;
 
 -- Modificare cantitate stoc pentru produsul cu id_produs=3 --
+
 UPDATE produse
 SET cantitate_stoc = 45
 WHERE id_produs = 3;
@@ -140,14 +153,17 @@ WHERE id_produs = 3;
 After the testing process, I deleted the data that was no longer relevant in order to preserve the database clean: 
 
 -- Stergerea produselor comandate pentru clientul 1 --
+
 DELETE FROM produse_comandate
 WHERE id_comanda IN (SELECT id_comanda FROM comenzi WHERE id_client = 1);
 
 -- Stergerea comenzilor clientului 1 --
+
 DELETE FROM comenzi
 WHERE id_client = 1;
 
 -- Stergerea clientului cu id_client=1 --
+
 DELETE FROM clienti
 WHERE id_client = 1;
 
@@ -160,24 +176,30 @@ In order to simulate various scenarios that might happen in real life I created 
 **Inserati aici toate instructiunile de SELECT pe care le-ati scris folosind filtrarile necesare astfel incat sa extrageti doar datele de care aveti nevoie**
 **Incercati sa acoperiti urmatoarele:**<br>
 -- Select all din produse --
+
 SELECT * FROM produse;
 
 -- Select nume si email clienti --
+
 SELECT nume, email FROM clienti;
 
 -- Filtrare produse cu pret sub 200 --
+
 SELECT * FROM produse
 WHERE pret < 200;
 
 -- Filtrare clienti cu email pe mail.com --
+
 SELECT * FROM clienti
 WHERE email LIKE '%@mail.com';
 
 -- Filtrare produse cu pret peste 100 si stoc disponibil --
+
 SELECT * FROM produse
 WHERE pret > 100 AND cantitate_stoc > 0;
 
 -- Filtrare clienti fara comenzi luna anterioara (subquery) --
+
 SELECT nume FROM clienti
 WHERE id_client NOT IN (
     SELECT DISTINCT id_client FROM comenzi
@@ -185,31 +207,37 @@ WHERE id_client NOT IN (
 );
 
 -- Inner Join: clienti care au comenzi --
+
 SELECT clienti.nume, comenzi.data_comanda
 FROM clienti
 INNER JOIN comenzi ON clienti.id_client = comenzi.id_client;
 
 -- Left Join: toti clientii, chiar si cei fara comenzi --
+
 SELECT clienti.nume, comenzi.data_comanda
 FROM clienti
 LEFT JOIN comenzi ON clienti.id_client = comenzi.id_client;
 
 -- Right Join: produse cu cantitate comandata --
+
 SELECT produse.denumire, produse_comandate.cantitate
 FROM produse
 RIGHT JOIN produse_comandate ON produse.id_produs = produse_comandate.id_produs;
 
 -- Cross Join: fiecare client cu fiecare produs --
+
 SELECT clienti.nume, produse.denumire
 FROM clienti
 CROSS JOIN produse;
 
 -- Top 5 produse cele mai scumpe --
+
 SELECT * FROM produse
 ORDER BY pret DESC
 LIMIT 5;
 
 -- Functii agregate si GROUP BY + HAVING  --
+
 SELECT id_produs, SUM(cantitate) AS total_vandute
 FROM produse_comandate
 GROUP BY id_produs
