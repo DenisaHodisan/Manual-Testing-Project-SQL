@@ -70,6 +70,7 @@ CREATE TABLE produse_comandate (
  
   After the database and the tables have been created, a few ALTER instructions were written in order to update the structure of the database, as described below:
 
+```sql
 --  Schimbare nume tabelă
 
 RENAME TABLE produse TO produse_v2;
@@ -98,7 +99,7 @@ MODIFY COLUMN id_client INT NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE clienti
 MODIFY COLUMN telefon VARCHAR(15) AFTER email;
-
+```
   
 ### DML (Data Manipulation Language)
 
@@ -107,6 +108,7 @@ MODIFY COLUMN telefon VARCHAR(15) AFTER email;
 
   Below you can find all the insert instructions that were created in the scope of this project:
 
+```sql
 -- Insert cu coloane explicite: specificarea coloanelor pe care sa se faca insert --
 
 INSERT INTO clienti (nume, email, telefon) VALUES 
@@ -134,10 +136,10 @@ INSERT INTO produse_comandate (id_comanda, id_produs, cantitate) VALUES
 (1, 1, 2),
 (1, 3, 1),
 (2, 2, 1);
-
+```
 
   After the insert, in order to prepare the data to be better suited for the testing process, I updated some data in the following way:
-
+```sql
   -- Modificare pret doar pentru produsul cu id_produs=1 --
 
 UPDATE produse
@@ -151,7 +153,7 @@ SET cantitate_stoc = 45
 WHERE id_produs = 3;
 
 After the testing process, I deleted the data that was no longer relevant in order to preserve the database clean: 
-
+```sql
 -- Stergerea produselor comandate pentru clientul 1 --
 
 DELETE FROM produse_comandate
@@ -166,15 +168,14 @@ WHERE id_client = 1;
 
 DELETE FROM clienti
 WHERE id_client = 1;
-
+```
 
 ### DQL (Data Query Language)
 
 
 In order to simulate various scenarios that might happen in real life I created the following queries that would cover multiple potential real-life situations:
 
-**Inserati aici toate instructiunile de SELECT pe care le-ati scris folosind filtrarile necesare astfel incat sa extrageti doar datele de care aveti nevoie**
-**Incercati sa acoperiti urmatoarele:**<br>
+```sql
 -- Select all din produse --
 
 SELECT * FROM produse;
@@ -250,7 +251,7 @@ WHERE id_client NOT IN (
     SELECT DISTINCT id_client FROM comenzi
     WHERE MONTH(data_comanda) = MONTH(CURDATE()) - 1
 );
-
+```
 ## Conclusions
 
 Throughout this project, I designed and implemented a relational database schema for an online clothing store, focusing on efficiently managing customers, products, orders, and their interrelations. I learned how to create tables with primary and foreign keys to enforce data integrity and model real-world relationships, including many-to-many associations via intermediate tables. The process of writing DDL statements such as CREATE TABLE and ALTER TABLE helped me deepen my understanding of database structure design and schema evolution.
