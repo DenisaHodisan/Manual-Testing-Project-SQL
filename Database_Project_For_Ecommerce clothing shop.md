@@ -30,7 +30,7 @@ The tables are connected in the following way:
 ```sql
   CREATE DATABASE  magazinonlineproiect1;
 USE magazinonlineproiect1;
-```
+
 -- creearea tabelelor --
 CREATE TABLE clienti (
     id_client INT PRIMARY KEY AUTO_INCREMENT,
@@ -66,7 +66,7 @@ CREATE TABLE produse_comandate (
     FOREIGN KEY (id_produs) REFERENCES produse(id_produs)
 );
 
-
+```
  
   After the database and the tables have been created, a few ALTER instructions were written in order to update the structure of the database, as described below:
 
